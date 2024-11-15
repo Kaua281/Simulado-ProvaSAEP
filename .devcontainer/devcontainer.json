@@ -19,7 +19,7 @@
 	"forwardPorts": [3306, 8080],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
+	"postCreateCommand": "mysql.server start && sleep 10 && mysql -u root -e 'CREATE DATABASE IF NOT EXISTS kanban;' && mysql -u root kanban < /workspaces/ProvaSAEP/backup.sql && mysql -u root -e 'USE kanban; SHOW TABLES;'",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -28,7 +28,8 @@
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"cweijan.vscode-mysql-client2",
-				"ritwickdey.liveserver"
+				"ritwickdey.liveserver",
+				"miguelsolorio.symbols"
 			]
 		}
 	}
