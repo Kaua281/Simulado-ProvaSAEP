@@ -22,11 +22,63 @@
             color: #333;
         }
 
-        .task-list {
+        /* Header com design melhorado */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header nav {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        header a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: #34495e;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        header a:hover {
+            background-color: #16a085;
+        }
+
+        /* Espaço para não sobrepor o conteúdo */
+        .content {
+            margin-top: 100px; /* Ajusta o conteúdo para baixo, considerando o header fixo */
+        }
+
+        .kanban-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .kanban-column {
+            width: 30%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
+        }
+
+        .kanban-column h2 {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .task {
@@ -34,6 +86,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
         .task p {
@@ -47,36 +100,69 @@
             border: 1px solid #ccc;
         }
 
-        button {
-            padding: 5px 10px;
-            border: none;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
         }
 
-        button:hover {
-            background-color: #45a049;
+        .task-actions button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .task-actions button:hover {
+            background-color: #16a085;
         }
     </style>
 </head>
 <body>
-    <h1>Kanban - Gerenciamento de Tarefas</h1>
 
-    <div class="task-list" id="task-list">
-        <!-- Tarefas serão exibidas aqui -->
+    <header>
+        <nav>
+            <a href="cadastro_usuario.html">Cadastro de Usuário</a>
+            <a href="cadastro_tarefa.html">Cadastro de Tarefa</a>
+        </nav>
+    </header>
+
+    <div class="content">
+        <h1>Kanban - Gerenciamento de Tarefas</h1>
+
+        <div class="kanban-container">
+            <!-- Coluna A Fazer -->
+            <div class="kanban-column" id="a_fazer">
+                <h2>A Fazer</h2>
+                <!-- Tarefas 'A Fazer' serão exibidas aqui -->
+            </div>
+
+            <!-- Coluna Fazendo -->
+            <div class="kanban-column" id="fazendo">
+                <h2>Fazendo</h2>
+                <!-- Tarefas 'Fazendo' serão exibidas aqui -->
+            </div>
+
+            <!-- Coluna Pronto -->
+            <div class="kanban-column" id="pronto">
+                <h2>Pronto</h2>
+                <!-- Tarefas 'Pronto' serão exibidas aqui -->
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             // Buscar todas as tarefas
-            fetch('https://redesigned-sniffle-7v9q79qvxp57hp666-8080.app.github.dev/tarefas')
+            fetch('https://redesigned-sniffle-7v9q79qvxp57hp666-8080.app.github.dev/tarefas') // Altere para a URL do seu backend
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(tarefa => {
                         const tarefaElement = createTarefaElement(tarefa);
-                        document.getElementById("task-list").appendChild(tarefaElement);
+                        // Adicionar a tarefa na coluna correspondente
+                        document.getElementById(tarefa.status).appendChild(tarefaElement);
                     });
                 })
                 .catch(error => console.error('Erro ao carregar as tarefas:', error));
@@ -86,6 +172,7 @@
         function createTarefaElement(tarefa) {
             const div = document.createElement('div');
             div.classList.add('task');
+            div.setAttribute('id', `task-${tarefa.id}`);  // ID único para cada tarefa
             div.innerHTML = `
                 <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
                 <p><strong>Setor:</strong> ${tarefa.nomeSetor}</p>
@@ -98,14 +185,28 @@
                     <option value="fazendo" ${tarefa.status === 'fazendo' ? 'selected' : ''}>Fazendo</option>
                     <option value="pronto" ${tarefa.status === 'pronto' ? 'selected' : ''}>Pronto</option>
                 </select>
+
+                <div class="task-actions">
+                    <button onclick="editarTarefa(${tarefa.id})">Editar</button>
+                    <button onclick="excluirTarefa(${tarefa.id})">Excluir</button>
+                </div>
             `;
             return div;
         }
 
-        // Função para alterar o status da tarefa
+        // Função para alterar o status da tarefa e mover para a coluna correspondente
         function alterarStatus(tarefaId, novoStatus) {
-            fetch(`/tarefas/${tarefaId}`, {
-                method: 'PATCH',
+            const tarefaElement = document.getElementById(`task-${tarefaId}`);
+            
+            // Mover a tarefa para a nova coluna
+            document.getElementById(novoStatus).appendChild(tarefaElement);
+
+            // Atualiza o status da combo box
+            document.getElementById(`status-${tarefaId}`).value = novoStatus;
+
+            // Envia a atualização para o backend
+            fetch(`https://redesigned-sniffle-7v9q79qvxp57hp666-8080.app.github.dev/tarefas/${tarefaId}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -113,16 +214,39 @@
             })
             .then(response => response.json())
             .then(updatedTarefa => {
-                // Atualiza a interface após a alteração
-                atualizarTarefaNoKanban(updatedTarefa);
+                console.log(updatedTarefa);  // Verifique se os dados retornados estão corretos
             })
             .catch(error => console.error('Erro ao atualizar o status da tarefa:', error));
         }
 
-        // Função para atualizar a tarefa no Kanban
-        function atualizarTarefaNoKanban(tarefa) {
-            const tarefaElement = document.getElementById(`status-${tarefa.id}`).parentElement;
-            tarefaElement.querySelector("select").value = tarefa.status;
+        // Função para editar uma tarefa
+        function editarTarefa(tarefaId) {
+            window.location.href = `cadastro_tarefa.html?id=${tarefaId}`;
+        }
+
+        // Função para excluir uma tarefa
+        function excluirTarefa(tarefaId) {
+            const confirmar = confirm("Você tem certeza que deseja excluir esta tarefa?");
+            if (confirmar) {
+                fetch(`https://redesigned-sniffle-7v9q79qvxp57hp666-8080.app.github.dev/tarefas/${tarefaId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Remover a tarefa da interface
+                        const tarefaElement = document.getElementById(`task-${tarefaId}`);
+                        tarefaElement.remove();
+                        alert('Tarefa excluída com sucesso!');
+                    } else {
+                        alert('Erro ao excluir a tarefa. Tente novamente.');
+                        console.error('Erro na resposta da API:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir a tarefa:', error);
+                    alert('Erro ao excluir a tarefa. Tente novamente.');
+                });
+            }
         }
     </script>
 </body>

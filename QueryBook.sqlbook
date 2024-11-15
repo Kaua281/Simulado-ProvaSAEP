@@ -31,6 +31,6 @@ INSERT INTO usuarios (nome, email) VALUES
 -- Inserção de exemplo de dados na tabela de tarefas
 INSERT INTO tarefas (usuario_id, descricao, nome_setor, prioridade, status) VALUES 
 (1, 'Organizar estoque de produtos', 'Logística', 'média', 'a_fazer'),
-(2, 'Revisar relatórios financeiros', 'Financeiro', 'alta', 'fazendo');
+
 -- SQLBook: Code
 SELECT * FROM tarefas;
