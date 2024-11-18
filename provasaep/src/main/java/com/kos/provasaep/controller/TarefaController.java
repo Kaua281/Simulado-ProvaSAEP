@@ -27,20 +27,20 @@ public class TarefaController {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
         tarefa.setUsuario(usuario); // Associa o usuário à tarefa
-        Tarefa tarefaCriada = tarefaRepository.save(tarefa); // Salva a tarefa no banco
-        return ResponseEntity.ok(tarefaCriada); // Retorna a tarefa criada
+        Tarefa tarefaCriada = tarefaRepository.save(tarefa); 
+        return ResponseEntity.ok(tarefaCriada); 
     }
 
     @GetMapping
     public List<Tarefa> listarTarefas() {
-        return tarefaRepository.findAll(); // Retorna todas as tarefas
+        return tarefaRepository.findAll(); 
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Tarefa> atualizarTarefa(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada) {
         return tarefaRepository.findById(id)
                 .map(tarefa -> {
-                    // Atualiza os campos da tarefa
+                    
                     if (tarefaAtualizada.getDescricao() != null) {
                         tarefa.setDescricao(tarefaAtualizada.getDescricao());
                     }
@@ -54,14 +54,12 @@ public class TarefaController {
                         tarefa.setPrioridade(tarefaAtualizada.getPrioridade());
                     }
 
-                    // Verifica se o usuário foi alterado
                     if (tarefaAtualizada.getUsuario() != null && tarefaAtualizada.getUsuario().getId() != null) {
                         Usuario usuario = usuarioRepository.findById(tarefaAtualizada.getUsuario().getId())
                                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-                        tarefa.setUsuario(usuario); // Associa o usuário à tarefa
+                        tarefa.setUsuario(usuario); 
                     }
 
-                    // Salva as alterações da tarefa
                     Tarefa tarefaSalva = tarefaRepository.save(tarefa);
                     return ResponseEntity.ok(tarefaSalva); // Retorna a tarefa atualizada
                 })
@@ -79,7 +77,7 @@ public class TarefaController {
     public ResponseEntity<Object> excluirTarefa(@PathVariable Long id) {
         return tarefaRepository.findById(id)
                 .map(tarefa -> {
-                    tarefaRepository.delete(tarefa); // Deleta a tarefa do banco de dados
+                    tarefaRepository.delete(tarefa); 
                     return ResponseEntity.noContent().build(); // Retorna status 204 (sem conteúdo)
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build()); // Retorna status 404 se não encontrar a tarefa

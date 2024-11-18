@@ -22,7 +22,6 @@
             color: #ffffff;
         }
 
-        /* Header com design melhorado */
         header {
             background-color: #0056b3;
             color: white;
@@ -33,14 +32,14 @@
             left: 0;
             z-index: 10;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex; /* Usando flexbox para alinhar os itens */
-            justify-content: space-between; /* Espaço entre o título e a navegação */
-            align-items: center; /* Alinha verticalmente */
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
         }
 
         header h1 {
-            font-size: 24px; /* Ajuste o tamanho conforme necessário */
-            margin-left: 30px; /* Adiciona margem à esquerda */
+            font-size: 24px; 
+            margin-left: 30px; 
         }
 
         header nav {
@@ -52,7 +51,7 @@
         header a {
             color: #f1f0ec;
             text-decoration: none;
-            font-size: 14px; /* Aumenta o tamanho da fonte para a navegação */
+            font-size: 14px; 
             font-weight: bold;
             padding: 10px 20px;
             border-radius: 5px;
@@ -63,10 +62,8 @@
             background-color: #16a085;
         }
 
-
-        /* Espaço para não sobrepor o conteúdo */
         .content {
-            margin-top: 100px; /* Ajusta o conteúdo para baixo, considerando o header fixo */
+            margin-top: 100px; 
         }
 
         .kanban-container {
@@ -141,22 +138,16 @@
     <div class="content">
 
         <div class="kanban-container">
-            <!-- Coluna A Fazer -->
             <div class="kanban-column" id="a_fazer">
                 <h2>A Fazer</h2>
-                <!-- Tarefas 'A Fazer' serão exibidas aqui -->
             </div>
 
-            <!-- Coluna Fazendo -->
             <div class="kanban-column" id="fazendo">
                 <h2>Fazendo</h2>
-                <!-- Tarefas 'Fazendo' serão exibidas aqui -->
             </div>
 
-            <!-- Coluna Pronto -->
             <div class="kanban-column" id="pronto">
                 <h2>Pronto</h2>
-                <!-- Tarefas 'Pronto' serão exibidas aqui -->
             </div>
         </div>
     </div>
@@ -176,11 +167,10 @@
                 .catch(error => console.error('Erro ao carregar as tarefas:', error));
         });
 
-        // Função para criar o elemento de tarefa
         function createTarefaElement(tarefa) {
             const div = document.createElement('div');
             div.classList.add('task');
-            div.setAttribute('id', `task-${tarefa.id}`);  // ID único para cada tarefa
+            div.setAttribute('id', `task-${tarefa.id}`);  
             div.innerHTML = `
                 <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
                 <p><strong>Setor:</strong> ${tarefa.nomeSetor}</p>
@@ -202,17 +192,10 @@
             return div;
         }
 
-        // Função para alterar o status da tarefa e mover para a coluna correspondente
         function alterarStatus(tarefaId, novoStatus) {
             const tarefaElement = document.getElementById(`task-${tarefaId}`);
-            
-            // Mover a tarefa para a nova coluna
             document.getElementById(novoStatus).appendChild(tarefaElement);
-
-            // Atualiza o status da combo box
             document.getElementById(`status-${tarefaId}`).value = novoStatus;
-
-            // Envia a atualização para o backend
             fetch(`https://redesigned-sniffle-7v9q79qvxp57hp666-8080.app.github.dev/tarefas/${tarefaId}`, {
                 method: 'PUT',
                 headers: {
@@ -222,17 +205,15 @@
             })
             .then(response => response.json())
             .then(updatedTarefa => {
-                console.log(updatedTarefa);  // Verifique se os dados retornados estão corretos
+                console.log(updatedTarefa);  
             })
             .catch(error => console.error('Erro ao atualizar o status da tarefa:', error));
         }
 
-        // Função para editar uma tarefa
         function editarTarefa(tarefaId) {
             window.location.href = `cadastro_tarefa.html?id=${tarefaId}`;
         }
 
-        // Função para excluir uma tarefa
         function excluirTarefa(tarefaId) {
             const confirmar = confirm("Você tem certeza que deseja excluir esta tarefa?");
             if (confirmar) {
@@ -241,7 +222,6 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Remover a tarefa da interface
                         const tarefaElement = document.getElementById(`task-${tarefaId}`);
                         tarefaElement.remove();
                         alert('Tarefa excluída com sucesso!');

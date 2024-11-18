@@ -18,12 +18,12 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioRepository.save(usuario)); // Cria o usuário
+        return ResponseEntity.ok(usuarioRepository.save(usuario)); 
     }
 
     @GetMapping
     public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll(); // Retorna todos os usuários
+        return usuarioRepository.findAll(); 
     }
 }
 

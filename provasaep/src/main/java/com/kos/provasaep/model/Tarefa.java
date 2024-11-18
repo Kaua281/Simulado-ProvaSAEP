@@ -38,7 +38,6 @@ public class Tarefa {
         this.status = Status.a_fazer;
     }
 
-    // Getters e setters
     public Long getId() {
         return id;
     }

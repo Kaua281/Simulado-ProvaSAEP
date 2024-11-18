@@ -17,7 +17,6 @@ public class Usuario {
     @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    // Getters e setters
     public Long getId() {
         return id;
     }
