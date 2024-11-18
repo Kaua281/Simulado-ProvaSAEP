@@ -1,9 +1,15 @@
-# SimuladoProvaSAEP
+# ProvaSAEP
 
-Estudos para a prova prática do SAEP - SENAI DENDEZEIROS.
+Prova prática do SAEP - SENAI DENDEZEIROS.
 
 ## Descrição
 Aplicação web para gerenciamento de tarefas em um quadro Kanban, usando **Spring Boot**, **MySQL** e **HTML/CSS/JS**.
+
+## Entregáveis
+- Diagrama Entidade-Relacionamento
+- Script de Criação do banco de dados
+- Caso de uso do cenário de geranciamento de tarefas
+- Aplicação funcional
 
 ## Funcionalidades
 - **Gerenciamento de Usuários**: Cadastro e listagem.
@@ -13,6 +19,6 @@ Aplicação web para gerenciamento de tarefas em um quadro Kanban, usando **Spri
 ## Configuração e Execução
 
 ### Requisitos
-- Java 17+, MySQL, Maven.
-- **Opcional**: Codespaces com `devcontainer.json` configurado.
+- Java 21, MySQL, Maven, SpringBoot.
+- **Opcional**: Utilize o Codespaces com `devcontainer.json` pré-configurado.
 

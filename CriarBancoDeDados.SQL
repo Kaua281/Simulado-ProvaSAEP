@@ -1,5 +1,3 @@
--- SQLBook: Code
-
 -- Criação do banco de dados
 CREATE DATABASE kanban;
 USE kanban;
